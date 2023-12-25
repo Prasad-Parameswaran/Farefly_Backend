@@ -28,8 +28,32 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    image: {
-        type: String
+    userImage: {
+        type: String,
+        default: "https://res.cloudinary.com/djbokpgy8/image/upload/v1702562587/yhbrme3piovw20620awv.png"
+    },
+    licenseFront: {
+        type: String,
+        default: "https://res.cloudinary.com/djbokpgy8/image/upload/v1702562813/slpxdfefvfzq9hlcjh6i.webp"
+    },
+    licenseBack: {
+        type: String,
+        default: "https://res.cloudinary.com/djbokpgy8/image/upload/v1702562865/fj05eyxoehny2poqe9v7.jpg"
+    },
+    district: {
+        type: String,
+    },
+    age: {
+        type: Number,
+
+    },
+    wallet: {
+        type: Number,
+        default: 0,
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
     }
 
 })

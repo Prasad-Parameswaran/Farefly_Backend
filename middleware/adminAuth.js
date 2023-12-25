@@ -3,17 +3,15 @@ const jwt = require('jsonwebtoken')
 
 const checkJwt = (req, res, next) => {
     try {
-
         const tokenWithBearer = req.headers['authorization'];
         if (tokenWithBearer) {
             const tokenOnly = tokenWithBearer.split(' ')[1];
-            const varifyJwt = jwt.verify(tokenOnly, 'secret')
-            console.log(varifyJwt.id, 'token with bariar');
+            console.log(tokenOnly, "jjjj");
+            const varifyJwt = jwt.verify(tokenOnly, 'admin')
             req.id = varifyJwt.id
-            console.log(req.id)
+            console.log(req.id, "this is admin id ");
+            next()
         }
-        next()
-
     } catch (error) {
         console.log(error.message);
     }

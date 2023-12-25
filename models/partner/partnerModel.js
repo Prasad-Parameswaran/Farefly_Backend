@@ -2,6 +2,10 @@ const mongoose = require('mongoose')
 
 
 const Schema = new mongoose.Schema({
+    partnerImage: {
+        type: String,
+        default: "https://res.cloudinary.com/dboafhu31/image/upload/v1625318266/imagen_2021-07-03_091743_vtbkf8.png"
+    },
     name: {
         type: String,
         required: true
@@ -31,9 +35,15 @@ const Schema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    partnerVarify: {
+    aadhaar: {
         type: String,
-        default: 'pending'
+    },
+    panCard: {
+        type: String,
+    },
+    partnerVarify: {
+        type: Boolean,
+        default: false
     },
     blockStatus: {
         type: Boolean,
