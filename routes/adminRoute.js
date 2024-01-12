@@ -15,5 +15,11 @@ adminRoute.get('/PartnerVarifyCancel', checkJwt.checkJwt, adminClr.PartnerVarify
 adminRoute.get('/carDatas', checkJwt.checkJwt, adminClr.carDatas)
 adminRoute.get('/carDetails', checkJwt.checkJwt, adminClr.carDetails)
 adminRoute.get('/ListOrUnlist', checkJwt.checkJwt, adminClr.ListOrUnlist)
+adminRoute.get('/allCouponDetails', checkJwt.checkJwt, adminClr.allCouponDetails)
+adminRoute.get('/BlockOrUnblock', checkJwt.checkJwt, adminClr.BlockOrUnblock)
+adminRoute.post('/addCoupon', checkJwt.checkJwt, adminClr.addCoupon)
+adminRoute.get('/bookingList', checkJwt.checkJwt, adminClr.bookingList)
+adminRoute.get('/adminChartbooking', checkJwt.checkJwt, adminClr.adminChartbooking)
+adminRoute.get('/adminsales', checkJwt.checkJwt, adminClr.adminsales)
 
 module.exports = adminRoute;

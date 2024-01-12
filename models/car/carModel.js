@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const carModel = new mongoose.Schema({
     owner: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'partnersCollection'
+        ref: 'Partner'
     },
     ownerName: {
         type: String,
@@ -94,6 +94,9 @@ const carModel = new mongoose.Schema({
         {
             startingdate: { type: String },
             endingdate: { type: String },
+            bookingId: {
+                type: mongoose.Schema.Types.ObjectId,
+            }
         },
     ],
     status: {

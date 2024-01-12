@@ -4,7 +4,6 @@ const otp = require('otp-generator')
 
 const nodeMailer = (UserEmail) => {
     const email = UserEmail
-    console.log(email, "55555555555555555555", process.env.Email)
     const UserOtp = otp.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
     const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
@@ -23,10 +22,9 @@ const nodeMailer = (UserEmail) => {
     };
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
-            console.log(error.message);
+            alert('something went wrong')
         }
     })
-    console.log("helloooooooo");
     return UserOtp
 
 }

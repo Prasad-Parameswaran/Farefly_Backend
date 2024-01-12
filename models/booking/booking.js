@@ -2,17 +2,17 @@ const mongoose = require('mongoose')
 const BookingSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.ObjectId,
-        ref: "user",
+        ref: "client",
         required: true
     },
     car: {
         type: mongoose.Schema.ObjectId,
-        ref: "Bike",
+        ref: "carModel",
         required: true
     },
     partner: {
         type: mongoose.Schema.ObjectId,
-        ref: "partner"
+        ref: "Partner"
 
     },
     pickUpDate: {
@@ -51,6 +51,9 @@ const BookingSchema = new mongoose.Schema({
         type: String,
     },
     dropPlace: {
+        type: String,
+    },
+    subLocation: {
         type: String,
     },
     Sgst: {

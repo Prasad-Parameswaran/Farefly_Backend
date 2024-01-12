@@ -4,16 +4,52 @@ const adminRoute = require('./routes/adminRoute')
 const patner = require('./routes/patnerRoute')
 const app = express()
 const cors = require('cors')
+const http = require('http')
 const mongoose = require('mongoose')
+const { Server } = require("socket.io");
+
+const server = http.createServer(app)
+
+const io = new Server(server, {
+    cors: {
+        origin: (origin, callback) => {
+            callback(null, origin === process.env.baseUrl);
+        },
+        credentials: true,
+    },
+});
+
+io.on("connection", (socket) => {
+    // Check if the socket is connected
+    if (socket.connected) {
+        console.log("Socket is connected");
+    } else {
+        console.log("Socket is not connected");
+    }
+    socket.on("disconnect", () => {
+        console.log("User disconnected");
+    });
+
+    socket.on("sentMessage", async () => {
+        console.log(
+            "Connection is on-------------------------------------------------------------"
+        );
+        io.emit("receiveMessage");
+    });
+});
+
+
+
+
 
 app.use(cors())
 require('dotenv').config()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-mongoose.connect('mongodb://127.0.0.1:27017/firefly')
+mongoose.connect(process.env.Database)
 
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: process.env.baseUrl,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
 }))
@@ -23,4 +59,4 @@ app.use('/', clientRoute)
 app.use("/admin", adminRoute)
 app.use('/partner', patner)
 
-app.listen(4000)
+server.listen(4000)

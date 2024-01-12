@@ -8,14 +8,12 @@ const checkJwt = (req, res, next) => {
         if (tokenWithBearer) {
             const tokenOnly = tokenWithBearer.split(' ')[1];
             const varifyJwt = jwt.verify(tokenOnly, 'secret')
-            console.log(varifyJwt.id, 'token with bariar');
             req.id = varifyJwt.id
-            console.log(req.id)
         }
         next()
 
     } catch (error) {
-        console.log(error.message);
+        alert('something went wrong')
     }
 }
 

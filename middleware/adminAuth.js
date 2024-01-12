@@ -6,14 +6,12 @@ const checkJwt = (req, res, next) => {
         const tokenWithBearer = req.headers['authorization'];
         if (tokenWithBearer) {
             const tokenOnly = tokenWithBearer.split(' ')[1];
-            console.log(tokenOnly, "jjjj");
             const varifyJwt = jwt.verify(tokenOnly, 'admin')
             req.id = varifyJwt.id
-            console.log(req.id, "this is admin id ");
             next()
         }
     } catch (error) {
-        console.log(error.message);
+        alert(error.message)
     }
 }
 

@@ -2,9 +2,12 @@
 const partnerModel = require('../models/partner/partnerModel')
 const carModels = require('../models/car/carModel')
 const car = require('../models/car/carModel')
-
+const booking = require('../models/booking/booking')
+const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const clientModel = require('../models/client/clientModel')
+const ChatModel = require('../models/chat/chat')
 
 const partnerLogin = async (req, res) => {
     try {
@@ -22,13 +25,11 @@ const partnerLogin = async (req, res) => {
                             res.status(200).json({ success: false, message: 'User was rejected...' })
 
                         } else {
-                            console.log("llll", checkPartner._id, "((((hhhh");
                             const partnerId = checkPartner._id
                             const jwtCreate = jwt.sign({
                                 id: partnerId,
                                 role: 'partner'
                             }, 'partner')
-                            console.log(jwtCreate, "created the jwt token .....")
                             res.status(200).json({ success: true, message: 'successfully logined..', Token: jwtCreate })
                         }
 
@@ -50,7 +51,6 @@ const partnerLogin = async (req, res) => {
 
 
     } catch (error) {
-        console.log(error.message)
         res.status(200).json({ success: false, message: 'something went wrong' })
     }
 
@@ -90,7 +90,6 @@ const addCarImg = async (req, res) => {
         })
 
     } catch (error) {
-        console.log(error.message)
         res.status(200).json({ success: false, message: 'something went wrong' })
     }
 }
@@ -98,7 +97,6 @@ const addCarImg = async (req, res) => {
 
 const editCar = async (req, res) => {
     try {
-        console.log(req.id, 'this is my owner id')
         const { carCategory, carLicensePlate, carMake, carModel, carYear, discription, featureOne, featureTwo, fuelType, image1, image2, image3, image4, ownerEmail, ownerName, price, transmission, phone, Rc, carId } = req.body.data
 
 
@@ -135,16 +133,13 @@ const editCar = async (req, res) => {
         })
 
     } catch (error) {
-        console.log(error.message)
         res.status(200).json({ success: false, message: 'something went wrong' })
     }
 }
 
 const partnerCars = async (req, res) => {
     try {
-        console.log('kkkkkkkkkoooooooooooooooo', req.id);
         const listCar = await car.find({ owner: req.id })
-        console.log(listCar, "jjjjjjj");
         if (listCar) {
             res.status(200).json({ success: true, message: "working", data: listCar })
         } else {
@@ -160,18 +155,14 @@ const partnerCars = async (req, res) => {
 
 const partnerCarDetail = async (req, res) => {
     try {
-        console.log(req.query.id, "kkkkkkkkkkkkkkkkkkkkthis is query data ");
         const viewCar = await car.findById({ _id: req.query.id })
-        console.log(viewCar, "jjjjjjjjjj");
         if (viewCar) {
-            console.log('ibdeyum ethi................');
             res.status(200).json({ success: true, message: "working", data: viewCar })
         } else {
             res.status(200).json({ success: false, message: ("something went wrong") })
         }
 
     } catch (error) {
-        console.log('this code is not correct ');
         res.status(200).json({ success: false, message: ("something went wrong") })
 
     }
@@ -194,8 +185,6 @@ const profileDetails = async (req, res) => {
 
 const editPartnerProfile = async (req, res) => {
     try {
-        console.log(req.id);
-        console.log(req.body.data, 'this is my profile datas')
         const { name, email, phone, district, localArea, partnerImage } = req.body.data
         const partnerProfile = await partnerModel.updateMany(
             { _id: req.id },
@@ -213,10 +202,178 @@ const editPartnerProfile = async (req, res) => {
         res.status(200).json({ success: true, message: 'successfully Profile Added' })
 
     } catch (error) {
-        console.log(error);
         res.status(400).json({ success: false, message: 'something went wrong..' })
     }
 }
+
+const BookingList = async (req, res) => {
+    try {
+        const bookings = await booking.find({ partner: req.id }).populate('car').populate('user').populate('partner').sort({ createdAt: -1 });
+        if (bookings) {
+            res.status(200).json({ success: true, bookingDetails: bookings })
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+}
+const statusHandle = async (req, res) => {
+    try {
+        await booking.findOneAndUpdate({ _id: req.body.data.id }, {
+            $set: {
+                status: req.body.data.status
+            }
+        }).then(async () => {
+            const bookings = await booking.find({ partner: req.id }).populate('car').populate('user')
+            if (bookings) {
+                res.status(200).json({ success: true, bookingDetails: bookings })
+
+            } else {
+                res.status(200).json({ success: false, message: 'Booking Not Available' })
+            }
+        })
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+}
+
+
+const PartnerBookingCancelled = async (req, res) => {
+    try {
+        const data = await booking.findOne({ _id: req.query.id })
+        const carId = data.car
+
+        if (data.status == 'booked') {
+
+            const result = await car.updateOne(
+                { _id: carId },
+                { $pull: { 'bookingdates': { bookingId: req.query.id } } }
+            )
+
+            await booking.findOneAndUpdate({ _id: req.query.id }, {
+                $set: {
+                    status: 'Cancel',
+                }
+            })
+
+            await clientModel.findOneAndUpdate({ _id: data.user }, {
+                $set: {
+                    wallet: data.TotalAmount,
+                }
+            })
+            const bookings = await booking.find({ partner: req.id }).populate("car").populate('user')
+            res.status(200).json({ success: true, bookingData: bookings, message: 'Amount will Return in Your Wallet' })
+
+        }
+        else {
+            res.status(200).json({
+                success: false,
+                message: `You Can't Cancel this Booking.`,
+            });
+        }
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+}
+
+
+const saveChat = async (req, res) => {
+    try {
+        const { userId, chat, bookingId } = req.body.data;
+        const chatFind = await ChatModel.findOne({ bookingId: bookingId });
+        if (chatFind) {
+            await ChatModel.findOneAndUpdate({ bookingId: bookingId }, { $push: { chat: chat } }).then((res) => {
+            })
+            res.json({ success: true })
+        } else {
+            res.json({ success: false })
+        }
+    } catch (error) {
+        //res.status(500).json({ success: false, error: "Internal Server Error" });
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+
+const getChat = async (req, res) => {
+    try {
+        const id = req.query.id;
+
+        const BookingId = new mongoose.Types.ObjectId(req.query.id)
+        const findChat = await ChatModel.find({ bookingId: BookingId }).populate('userId').populate('partnerId')
+
+        if (findChat) {
+            res.status(200).send({
+                success: true,
+                findChat,
+            });
+        } else {
+            res.status(404).send({
+                success: false,
+                message: "Chat not found",
+            });
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+}
+
+
+const ChartView = async (req, res) => {
+    try {
+        const id = req.id;
+        const limit = 5;
+
+        // Count total documents without skipping and limiting
+        const totalItems = await booking.countDocuments({ partner: id });
+
+        const totalPages = Math.ceil(totalItems / limit);
+        const page = parseInt(req.query.page) || 1;
+        const skip = (page - 1) * limit;
+
+        const findbooking = await booking.find({ partner: id }).populate('user').populate('partner').populate('car')
+
+        let total = 0;
+        let complete = [];
+        let unique = 0;
+
+        if (findbooking) {
+            complete = findbooking.filter((booking) => booking.status === "Completed");
+
+            const userss = findbooking.map((value) => value.user.email);
+            unique = Array.from(new Set(userss));
+
+            if (complete.length > 0) {
+                total = complete.reduce((accumulator, currentValue) => accumulator + currentValue.TotalAmount, 0);
+            }
+
+            const bookingID = findbooking.map((booking) => booking._id);
+            const threeDigitIDs = bookingID.map((hexString) => {
+                const decimalNumber = parseInt(hexString, 16);
+                return ('11' + (decimalNumber % 1000)).slice(-3); // Ensure it's a three-digit number
+            });
+
+
+
+            const sortedNumericIDs = threeDigitIDs.map(Number).sort((a, b) => a - b);
+            res.status(200).json({
+                success: true,
+                message: "Data found",
+                findbooking,
+                total,
+                complete,
+                unique,
+                Ids: sortedNumericIDs,
+                totalPages,
+                page
+            });
+        } else {
+            res.status(404).json({ success: false, message: "No bookings found" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error", success: false });
+    }
+};
+
 
 module.exports = {
     partnerLogin,
@@ -225,5 +382,11 @@ module.exports = {
     partnerCarDetail,
     profileDetails,
     editPartnerProfile,
-    editCar
+    editCar,
+    BookingList,
+    statusHandle,
+    PartnerBookingCancelled,
+    saveChat,
+    getChat,
+    ChartView
 }
