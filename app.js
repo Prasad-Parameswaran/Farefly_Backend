@@ -43,6 +43,7 @@ io.on("connection", (socket) => {
 
 
 app.use(cors())
+
 require('dotenv').config()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
