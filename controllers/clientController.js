@@ -451,13 +451,16 @@ const findHomeSearch = async (req, res) => {
 const findLocalAreaCar = async (req, res) => {
     try {
         const { localArea, pickUpDate, dropDate } = req.body.data
+        console.log(localArea, pickUpDate, dropDate)
         const carList = await carModel.find().populate('owner')
+        console.log(carList)
         const findDistrictPartner = await partnerModel.find({ localArea: localArea })
+        console.log(findDistrictPartner)
         const LocalAreasList = await partnerModel.find({ district: findDistrictPartner[0].district })
         const car = carList.filter((car) => {
-            return findDistrictPartner.some((val) => String(car.owner) === String(val._id))
+            return findDistrictPartner.some((val) => String(car.owner._id) === String(val._id))
         })
-
+        console.log(car)
         const findedCars = car.filter((value) => {
             if (value.bookingdates.length == 0) {
                 return true
@@ -473,6 +476,7 @@ const findLocalAreaCar = async (req, res) => {
                 return !isOverlap;
             }
         })
+        console.log(findedCars, 'hkkkkkkkkkkkkkkkkkkk')
 
         const partnerLocalArea = [...new Set(LocalAreasList.map(value => value.localArea))]
         console.log(partnerLocalArea, 'this is partner local area ');
