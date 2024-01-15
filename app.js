@@ -50,7 +50,7 @@ app.use(express.urlencoded({ extended: true }))
 mongoose.connect(process.env.Database)
 
 app.use(cors({
-    origin: process.env.baseUrl,
+    origin: 'https://main.d15nn14n4kkzm8.amplifyapp.com',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
 }))
