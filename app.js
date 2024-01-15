@@ -63,4 +63,6 @@ app.use('/', clientRoute)
 app.use("/admin", adminRoute)
 app.use('/partner', patner)
 
-server.listen(4000)
+server.listen(4000, () => {
+    console.log('server is running ')
+})
