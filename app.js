@@ -81,37 +81,37 @@ const app = express();
 const cors = require('cors');
 const http = require('http');
 const mongoose = require('mongoose');
-//const { Server } = require("socket.io");
+const { Server } = require("socket.io");
 
 const server = http.createServer(app);
-//const io = new Server(server, {
-//    cors: {
-//        origin: (origin, callback) => {
-//            callback(null, origin === process.env.baseUrl);
-//        },
-//        credentials: true,
-//    },
-//});
+const io = new Server(server, {
+    cors: {
+        origin: (origin, callback) => {
+            callback(null, origin === 'https://main.d15nn14n4kkzm8.amplifyapp.com');
+        },
+        credentials: true,
+    },
+});
 
-//io.on("connection", (socket) => {
-//    if (socket.connected) {
-//        console.log("Socket is connected");
-//    } else {
-//        console.log("Socket is not connected");
-//    }
+io.on("connection", (socket) => {
+    if (socket.connected) {
+        console.log("Socket is connected");
+    } else {
+        console.log("Socket is not connected");
+    }
 
-//    socket.on("disconnect", () => {
-//        console.log("User disconnected");
-//    });
+    socket.on("disconnect", () => {
+        console.log("User disconnected");
+    });
 
-//    socket.on("sentMessage", async () => {
-//        console.log("Connection is on-------------------------------------------------------------");
-//        io.emit("receiveMessage");
-//    });
-//});
+    socket.on("sentMessage", async () => {
+        console.log("Connection is on-------------------------------------------------------------");
+        io.emit("receiveMessage");
+    });
+});
 
 // Remove this line, as it's redundant with the later cors() middleware
-// app.use(cors());
+app.use(cors());
 
 require('dotenv').config();
 app.use(express.json());
