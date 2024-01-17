@@ -12,13 +12,9 @@ const server = http.createServer(app)
 
 const io = new Server(server, {
     cors: {
-        origin: (origin, callback) => {
-            callback(null, origin === process.env.baseUrl);
-        },
+        origin: 'https://farefly.de-vip.online/',
+        methods: ['GET', 'POST', 'PATCH', 'PUT'],
         credentials: true,
-        methods: ["GET", "POST"],
-        allowedHeaders: ["my-custom-header"],
-        transports: ["websocket"],
     },
 });
 
