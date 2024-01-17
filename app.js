@@ -12,7 +12,7 @@ const server = http.createServer(app)
 
 const io = new Server(server, {
     cors: {
-        origin: 'https://farefly.de-vip.online/socket.io/',
+        origin: 'https://farefly.de-vip.online',
         methods: ['GET', 'POST', 'PATCH', 'PUT'],
         credentials: true,
     },
