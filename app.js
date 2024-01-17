@@ -12,7 +12,7 @@ const server = http.createServer(app)
 
 const io = new Server(server, {
     cors: {
-        origin: 'https://farefly.de-vip.online',
+        origin: 'https://farefly.de-vip.online/socket.io/',
         methods: ['GET', 'POST', 'PATCH', 'PUT'],
         credentials: true,
     },
@@ -49,7 +49,7 @@ app.use(express.urlencoded({ extended: true }))
 mongoose.connect(process.env.Database)
 
 app.use(cors({
-    origin: 'https://farefly.de-vip.online/socket.io/',
+    origin: 'https://farefly.de-vip.online',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
 }))
