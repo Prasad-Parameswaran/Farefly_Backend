@@ -16,6 +16,9 @@ const io = new Server(server, {
             callback(null, origin === process.env.baseUrl);
         },
         credentials: true,
+        methods: ["GET", "POST"],
+        allowedHeaders: ["my-custom-header"],
+        transports: ["websocket"],
     },
 });
 
@@ -42,7 +45,7 @@ io.on("connection", (socket) => {
     });
 })
 
-app.use(cors())
+//app.use(cors())
 
 require('dotenv').config()
 app.use(express.json())
