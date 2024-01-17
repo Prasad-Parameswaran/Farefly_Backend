@@ -18,6 +18,13 @@ app.use('/', clientRoute)
 app.use("/admin", adminRoute)
 app.use('/partner', patner)
 
+
+
+app.use(cors({
+    origin: 'https://farefly.de-vip.online',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    credentials: true,
+}))
 const io = new Server(server, {
     cors: {
         origin: 'https://farefly.de-vip.online',
@@ -49,11 +56,6 @@ io.on("connection", (socket) => {
 
 
 
-//app.use(cors({
-//    origin: 'https://farefly.de-vip.online',
-//    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-//    credentials: true,
-//}))
 
 
 
