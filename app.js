@@ -10,12 +10,22 @@ const { Server } = require("socket.io");
 
 const server = http.createServer(app)
 
+//const io = new Server(server, {
+//    cors: {
+//        origin: (origin, callback) => {
+//            callback(null, origin === process.env.baseUrl);
+//        },
+//        credentials: true,
+//    },
+//});
+
 const io = new Server(server, {
     cors: {
-        origin: (origin, callback) => {
-            callback(null, origin === process.env.baseUrl);
+        cors: {
+            origin: "*",
+            methods: ["GET", "POST"],
         },
-        credentials: true,
+
     },
 });
 
