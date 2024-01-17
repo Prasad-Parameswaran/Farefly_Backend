@@ -209,8 +209,9 @@ const editPartnerProfile = async (req, res) => {
 const BookingList = async (req, res) => {
     try {
         const bookings = await booking.find({ partner: req.id }).populate('car').populate('user').populate('partner').sort({ createdAt: -1 });
+        const chat = await ChatModel.find()
         if (bookings) {
-            res.status(200).json({ success: true, bookingDetails: bookings })
+            res.status(200).json({ success: true, bookingDetails: bookings, chatData: chat })
         }
     } catch (error) {
         res.status(500).json({ success: false, message: "Internal server error" });
@@ -282,8 +283,12 @@ const saveChat = async (req, res) => {
         const { userId, chat, bookingId } = req.body.data;
         const chatFind = await ChatModel.findOne({ bookingId: bookingId });
         if (chatFind) {
-            await ChatModel.findOneAndUpdate({ bookingId: bookingId }, { $push: { chat: chat } }).then((res) => {
-            })
+            await ChatModel.findOneAndUpdate({ bookingId: bookingId }, { $push: { chat: chat } })
+
+            await ChatModel.findOneAndUpdate(
+                { bookingId: bookingId },
+                { $set: { PartnerMessage: true } },
+            )
             res.json({ success: true })
         } else {
             res.json({ success: false })
@@ -300,7 +305,10 @@ const getChat = async (req, res) => {
 
         const BookingId = new mongoose.Types.ObjectId(req.query.id)
         const findChat = await ChatModel.find({ bookingId: BookingId }).populate('userId').populate('partnerId')
-
+        await ChatModel.findOneAndUpdate(
+            { bookingId: BookingId },
+            { $set: { userMessage: false } },
+        )
         if (findChat) {
             res.status(200).send({
                 success: true,

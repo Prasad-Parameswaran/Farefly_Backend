@@ -39,11 +39,7 @@ io.on("connection", (socket) => {
         );
         io.emit("receiveMessage");
     });
-});
-
-
-
-
+})
 
 app.use(cors())
 

@@ -698,9 +698,10 @@ const payments = async (req, res) => {
 const Bookinghistory = async (req, res) => {
     try {
         const bookings = await booking.find({ user: req.id }).populate("car").populate('partner')
+        const chat = await ChatModel.find()
         console.log(bookings, 'this is my booking history ....')
         if (bookings) {
-            res.status(200).json({ success: true, bookingDetails: bookings })
+            res.status(200).json({ success: true, bookingDetails: bookings, chatData: chat })
 
         } else {
             res.status(200).json({ success: false })
@@ -830,6 +831,11 @@ const saveChat = async (req, res) => {
         const chatFind = await ChatModel.findOne({ bookingId: bookingId })
         if (chatFind) {
             await ChatModel.findOneAndUpdate({ bookingId: bookingId }, { $push: { chat: chat } });
+            await ChatModel.findOneAndUpdate(
+                { bookingId: BookingId },
+                { $set: { userMessage: true } },
+            ).then((res) => { console.log(res, 'this is my response') })
+
             res.json({ success: true })
         } else {
             res.json({ success: false })
@@ -846,12 +852,16 @@ const getChat = async (req, res) => {
         const BookingId = new mongoose.Types.ObjectId(req.query.id)
         console.log(BookingId);
         const findChat = await ChatModel.find({ bookingId: BookingId }).populate('userId').populate('partnerId')
+        await ChatModel.findOneAndUpdate(
+            { bookingId: BookingId },
+            { $set: { PartnerMessage: false } },
+        )
         console.log(findChat[0].chat, 'this is my finded chat ')
         if (findChat) {
             res.status(200).send({
                 success: true,
                 findChat,
-            });
+            })
         } else {
             res.status(404).send({
                 success: false,

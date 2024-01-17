@@ -24,9 +24,15 @@ const chatSchema = new mongoose.Schema(
                     type: String,
                 }
             }
-        ]
-
-
+        ],
+        userMessage: {
+            type: Boolean,
+            default: false
+        },
+        PartnerMessage: {
+            type: Boolean,
+            default: false
+        }
     },
     {
         timestamps: true,
