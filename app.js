@@ -49,7 +49,7 @@ app.use(express.urlencoded({ extended: true }))
 mongoose.connect(process.env.Database)
 
 app.use(cors({
-    origin: 'https://farefly.de-vip.online',
+    origin: 'https://farefly.de-vip.online/socket.io/',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
 }))
