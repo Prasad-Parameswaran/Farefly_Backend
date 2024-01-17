@@ -10,26 +10,6 @@ const { Server } = require("socket.io");
 
 const server = http.createServer(app)
 
-
-
-
-require('dotenv').config()
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-mongoose.connect(process.env.Database)
-
-app.use(cors({
-    origin: process.env.baseUrl,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    credentials: true,
-}))
-
-
-app.use('/', clientRoute)
-app.use("/admin", adminRoute)
-app.use('/partner', patner)
-
-
 const io = new Server(server, {
     cors: {
         origin: 'https://farefly.de-vip.online',
@@ -61,7 +41,23 @@ io.on("connection", (socket) => {
     });
 })
 
+app.use(cors())
 
+require('dotenv').config()
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+mongoose.connect(process.env.Database)
+
+app.use(cors({
+    origin: 'https://farefly.de-vip.online',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    credentials: true,
+}))
+
+
+app.use('/', clientRoute)
+app.use("/admin", adminRoute)
+app.use('/partner', patner)
 
 server.listen(4000, () => {
     console.log('server is running ')
