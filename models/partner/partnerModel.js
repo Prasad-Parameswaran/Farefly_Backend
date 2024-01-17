@@ -51,4 +51,12 @@ const Schema = new mongoose.Schema({
     }
 })
 
+
+
+
 module.exports = mongoose.model('Partner', Schema)
+
+// this is partner model 
+
+
+
