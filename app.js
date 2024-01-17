@@ -45,7 +45,7 @@ io.on("connection", (socket) => {
     });
 })
 
-//app.use(cors())
+app.use(cors())
 
 require('dotenv').config()
 app.use(express.json())
