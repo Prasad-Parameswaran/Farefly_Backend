@@ -12,11 +12,12 @@ const server = http.createServer(app)
 app.use(cors())
 const io = new Server(server, {
     cors: {
-        origin: process.env.baseUrl,
+        origin: '*',
         methods: ['GET', 'POST', 'PATCH', 'PUT'],
         credentials: true,
     },
 });
+
 
 
 require('dotenv').config()
