@@ -7,7 +7,7 @@ const cors = require('cors')
 const http = require('http')
 const mongoose = require('mongoose')
 const { Server } = require("socket.io");
-//app.use(cors())
+app.use(cors())
 const server = http.createServer(app)
 
 require('dotenv').config()
@@ -20,7 +20,7 @@ app.use('/partner', patner)
 
 //'https://farefly.de-vip.online'
 
-app.use(cors())
+//app.use(cors())
 const io = new Server(server, {
     cors: {
         origin: process.env.baseUrl,
