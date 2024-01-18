@@ -7,8 +7,17 @@ const cors = require('cors')
 const http = require('http')
 const mongoose = require('mongoose')
 const { Server } = require("socket.io");
-app.use(cors())
 const server = http.createServer(app)
+
+app.use(cors())
+const io = new Server(server, {
+    cors: {
+        origin: process.env.baseUrl,
+        methods: ['GET', 'POST', 'PATCH', 'PUT'],
+        credentials: true,
+    },
+});
+
 
 require('dotenv').config()
 app.use(express.json())
@@ -21,13 +30,6 @@ app.use('/partner', patner)
 //'https://farefly.de-vip.online'
 
 //app.use(cors())
-const io = new Server(server, {
-    cors: {
-        origin: process.env.baseUrl,
-        methods: ['GET', 'POST', 'PATCH', 'PUT'],
-        credentials: true,
-    },
-});
 
 
 
