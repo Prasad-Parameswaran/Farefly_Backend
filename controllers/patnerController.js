@@ -210,6 +210,7 @@ const BookingList = async (req, res) => {
     try {
         const bookings = await booking.find({ partner: req.id }).populate('car').populate('user').populate('partner').sort({ createdAt: -1 });
         const chat = await ChatModel.find()
+        console.log(chat, 'thhhhhhhhhhhhhhh')
         if (bookings) {
             res.status(200).json({ success: true, bookingDetails: bookings, chatData: chat })
         }

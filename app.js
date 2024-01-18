@@ -18,16 +18,16 @@ app.use('/', clientRoute)
 app.use("/admin", adminRoute)
 app.use('/partner', patner)
 
-
+//'https://farefly.de-vip.online'
 
 app.use(cors({
-    origin: 'https://farefly.de-vip.online',
+    origin: process.env.baseUrl,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
 }))
 const io = new Server(server, {
     cors: {
-        origin: 'https://farefly.de-vip.online',
+        origin: process.env.baseUrl,
         methods: ['GET', 'POST', 'PATCH', 'PUT'],
         credentials: true,
     },

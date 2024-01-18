@@ -25,7 +25,7 @@ const chatSchema = new mongoose.Schema(
                 }
             }
         ],
-        userMessage: {
+        UserMessage: {
             type: Boolean,
             default: false
         },

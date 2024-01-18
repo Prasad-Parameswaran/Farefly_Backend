@@ -825,26 +825,32 @@ const Applycoupon = async (req, res) => {
 
 const saveChat = async (req, res) => {
     try {
+        console.log(req.body.data, 'shoooooooo');
         const { partnerId, chat, bookingId } = req.body.data;
-        const BookingId = new mongoose.Types.ObjectId(bookingId)
 
-        const chatFind = await ChatModel.findOne({ bookingId: bookingId })
+        const BookingId = new mongoose.Types.ObjectId(bookingId);
+
+        const chatFind = await ChatModel.findOne({ bookingId: BookingId });
+        console.log(chatFind, 'chatfindds');
         if (chatFind) {
-            await ChatModel.findOneAndUpdate({ bookingId: bookingId }, { $push: { chat: chat } });
             await ChatModel.findOneAndUpdate(
                 { bookingId: BookingId },
-                { $set: { userMessage: true } },
-            ).then((res) => { console.log(res, 'this is my response') })
-
-            res.json({ success: true })
+                {
+                    $push: { chat: chat },
+                    $set: { UserMessage: true }
+                }
+            );
+            res.json({ success: true });
         } else {
-            res.json({ success: false })
+            res.json({ success: false, message: "Chat not found for the given bookingId" });
         }
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ success: false, error: "Internal Server Error" });
+        console.error(error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 };
+
+
 
 const getChat = async (req, res) => {
     try {
