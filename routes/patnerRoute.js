@@ -18,4 +18,4 @@ parnerRoute.post('/saveChat', jwtToken.checkJwt, partnerClr.saveChat)
 parnerRoute.get('/getChat', jwtToken.checkJwt, partnerClr.getChat)
 parnerRoute.get('/chartbooking', jwtToken.checkJwt, partnerClr.ChartView)
 
-module.exports = parnerRoute;
+module.exports = parnerRoute;  //dd
