@@ -31,6 +31,7 @@ app.use('/partner', patner)
 //'https://farefly.de-vip.online'
 
 //app.use(cors())
+//app.use(cors())
 
 
 
