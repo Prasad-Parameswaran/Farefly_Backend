@@ -10,15 +10,20 @@ const mongoose = require('mongoose')
 const { Server } = require("socket.io");
 const server = http.createServer(app)
 
-const allowedOrigin = process.env.CLIENT_URL || 'http://localhost:3000'
+const allowedOrigins = [
+    'http://localhost:3000',
+    'https://farefly-frontend.vercel.app',
+    process.env.CLIENT_URL
+].filter(Boolean);
+
 app.use(cors({
-    origin: allowedOrigin,
+    origin: allowedOrigins,
     credentials: true,
 }))
 
 const io = new Server(server, {
     cors: {
-        origin: allowedOrigin,
+        origin: allowedOrigins,
         methods: ['GET', 'POST', 'PATCH', 'PUT'],
         credentials: true,
     },
