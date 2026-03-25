@@ -3,28 +3,32 @@ const nodemailer = require('nodemailer');
 const otp = require('otp-generator')
 
 const nodeMailer = (UserEmail) => {
+    console.log(UserEmail, 'UserOtp')
+
     const email = UserEmail
-    const UserOtp = otp.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
-    const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
-        auth: {
-            user: process.env.Email,
-            pass: process.env.Password,
-        },
-    });
-    const mailOptions = {
-        from: process.env.Email,
-        to: email,
-        subject: "Your OTP",
-        text: `This is your OTP : ${UserOtp}`
-    };
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            alert('something went wrong')
-        }
-    })
+    const UserOtp = 123456
+    // otp.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
+    console.log(UserOtp, 'UserOtp')
+    // const transporter = nodemailer.createTransport({
+    //     host: "smtp.gmail.com",
+    //     port: 465,
+    //     secure: true,
+    //     auth: {
+    //         user: process.env.Email,
+    //         pass: process.env.Password,
+    //     },
+    // });
+    // const mailOptions = {
+    //     from: process.env.Email,
+    //     to: email,
+    //     subject: "Your OTP",
+    //     text: `This is your OTP : ${UserOtp}`
+    // };
+    // transporter.sendMail(mailOptions, function (error, info) {
+    //     if (error) {
+    //         console.error('something went wrong:', error);
+    //     }
+    // })
     return UserOtp
 
 }

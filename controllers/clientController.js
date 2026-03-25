@@ -17,9 +17,11 @@ let email
 const signUp = async (req, res) => {
     try {
         const { email } = req.body
+        console.log(req.body, 'jjjjjjjjjjjjjj')
         const userExist = await client.findOne({ email: email })
         if (!userExist) {
             const otp = nodeMailer(email)
+            console.log(otp, 'otpddddddddddddddddddddddd')
             res.status(200).json({ otp: otp, success: true })
         }
         else {
@@ -48,7 +50,9 @@ const otp = async (req, res) => {
             array.push(otpObj[key])
         }
         const joinedValue = array.join("");
-        if (joinedValue === userotp) {
+        console.log(joinedValue, otpObj, userotp, 'joinedValue')
+
+        if (joinedValue == userotp) {
             const pass = await bcrypt.hash(password, 10);
             const rePass = await bcrypt.hash(repassword, 10);
             userdetails = client({
@@ -840,6 +844,13 @@ const saveChat = async (req, res) => {
                     $set: { UserMessage: true }
                 }
             );
+
+            // Emit socket event to notify real-time update
+            const io = req.app.get('io');
+            if (io) {
+                io.emit("receiveMessage");
+            }
+
             res.json({ success: true });
         } else {
             res.json({ success: false, message: "Chat not found for the given bookingId" });

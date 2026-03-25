@@ -290,6 +290,13 @@ const saveChat = async (req, res) => {
                 { bookingId: bookingId },
                 { $set: { PartnerMessage: true } },
             )
+
+            // Emit socket event to notify real-time update
+            const io = req.app.get('io');
+            if (io) {
+                io.emit("receiveMessage");
+            }
+
             res.json({ success: true })
         } else {
             res.json({ success: false })

@@ -18,12 +18,19 @@ const io = new Server(server, {
     },
 });
 
+// Make the io instance accessible anywhere using req.app.get('io')
+app.set('io', io);
 
 
 require('dotenv').config()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-mongoose.connect(process.env.Database)
+mongoose.connect(process.env.MONGO_URL)
+    .then(() => console.log('Connected to MongoDB'))
+    .catch((err) => {
+        console.error('MongoDB connection error:', err);
+        process.exit(1);
+    })
 app.use('/', clientRoute)
 app.use("/admin", adminRoute)
 app.use('/partner', patner)
@@ -60,6 +67,6 @@ io.on("connection", (socket) => {
 
 
 
-server.listen(4000, () => {
+server.listen(5000, () => {
     console.log('server is running ')
 })
