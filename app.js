@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const clientRoute = require('./routes/clientRoute')
 const adminRoute = require('./routes/adminRoute')
@@ -14,6 +15,7 @@ app.use(cors({
     origin: allowedOrigin,
     credentials: true,
 }))
+
 const io = new Server(server, {
     cors: {
         origin: allowedOrigin,
@@ -25,29 +27,21 @@ const io = new Server(server, {
 // Make the io instance accessible anywhere using req.app.get('io')
 app.set('io', io);
 
-
-require('dotenv').config()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
 mongoose.connect(process.env.MONGO_URL)
     .then(() => console.log('Connected to MongoDB'))
     .catch((err) => {
         console.error('MongoDB connection error:', err);
         process.exit(1);
     })
+
 app.use('/', clientRoute)
 app.use("/admin", adminRoute)
 app.use('/partner', patner)
 
-//'https://farefly.de-vip.online'
-
-//app.use(cors())
-//app.use(cors()) kk
-
-
-
 io.on("connection", (socket) => {
-    // Check if the socket is connected
     if (socket.connected) {
         console.log("Socket is connected");
     } else {
@@ -56,21 +50,19 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
         console.log("User disconnected");
     });
-
     socket.on("sentMessage", async () => {
-        console.log(
-            "Connection is on-------------------------------------------------------------"
-        );
         io.emit("receiveMessage");
     });
 })
 
+const PORT = process.env.PORT || 5000
+server.listen(PORT, () => {
+    console.log(`server is running on port ${PORT}`)
+})
 
 
 
-
-
-
-server.listen(5000, () => {
-    console.log('server is running ')
+const PORT = process.env.PORT || 5000
+server.listen(PORT, () => {
+    console.log(`server is running on port ${PORT}`)
 })
