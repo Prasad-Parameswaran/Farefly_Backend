@@ -9,10 +9,14 @@ const mongoose = require('mongoose')
 const { Server } = require("socket.io");
 const server = http.createServer(app)
 
-app.use(cors())
+const allowedOrigin = process.env.CLIENT_URL || 'http://localhost:3000'
+app.use(cors({
+    origin: allowedOrigin,
+    credentials: true,
+}))
 const io = new Server(server, {
     cors: {
-        origin: '*',
+        origin: allowedOrigin,
         methods: ['GET', 'POST', 'PATCH', 'PUT'],
         credentials: true,
     },
