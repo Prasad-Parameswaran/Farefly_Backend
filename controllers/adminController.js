@@ -9,7 +9,7 @@ const coupon = require('../models/coupon/coupon')
 const login = async (req, res) => {
     try {
         const { email, password } = req.body.data
-        if (email === process.env.adminEmail && process.env.adminPassword === password) {
+        if (email == process.env.adminEmail && process.env.adminPassword == password) {
             const adminId = process.env.adminEmail
             const jwtcreating = jwt.sign({
                 id: adminId,
