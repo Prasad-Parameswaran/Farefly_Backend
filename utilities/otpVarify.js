@@ -3,35 +3,40 @@ const nodemailer = require('nodemailer');
 const otp = require('otp-generator')
 
 const nodeMailer = (UserEmail) => {
-    console.log(UserEmail, 'UserOtp')
+    console.log(UserEmail, 'UserEmail')
 
     const email = UserEmail
-    const UserOtp = 123456
-    // otp.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
-    console.log(UserOtp, 'UserOtp')
-    // const transporter = nodemailer.createTransport({
-    //     host: "smtp.gmail.com",
-    //     port: 465,
-    //     secure: true,
-    //     auth: {
-    //         user: process.env.Email,
-    //         pass: process.env.Password,
-    //     },
-    // });
-    // const mailOptions = {
-    //     from: process.env.Email,
-    //     to: email,
-    //     subject: "Your OTP",
-    //     text: `This is your OTP : ${UserOtp}`
-    // };
-    // transporter.sendMail(mailOptions, function (error, info) {
-    //     if (error) {
-    //         console.error('something went wrong:', error);
-    //     }
-    // })
-    return UserOtp
+    const UserOtp = otp.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
+    console.log(UserOtp, 'Generated OTP')
 
+    const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+            user: process.env.Email,
+            pass: process.env.Password, // Ensure you have this in your .env file
+        },
+    });
+
+    const mailOptions = {
+        from: process.env.Email,
+        to: email,
+        subject: "Your OTP from Farefly",
+        text: `This is your OTP : ${UserOtp}`
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.error('Error sending email:', error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    })
+
+    return UserOtp
 }
+
 module.exports = {
     nodeMailer
 };
