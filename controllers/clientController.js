@@ -20,7 +20,7 @@ const signUp = async (req, res) => {
         console.log(req.body, 'jjjjjjjjjjjjjj')
         const userExist = await client.findOne({ email: email })
         if (!userExist) {
-            const otp = nodeMailer(email)
+            const otp = await nodeMailer(email)
             console.log(otp, 'otpddddddddddddddddddddddd')
             res.status(200).json({ otp: otp, success: true })
         }
@@ -270,7 +270,7 @@ const forgotPass = async (req, res) => {
         email = req.body.data.email
         const emailVarify = await client.findOne({ email: email })
         if (emailVarify) {
-            forgotOtp = nodeMailer(email)
+            forgotOtp = await nodeMailer(email)
             res.json({ succes: true, message: 'OTP send into Your Email.' })
         } else {
             res.json({ succes: false, message: 'Enter valid email.' })

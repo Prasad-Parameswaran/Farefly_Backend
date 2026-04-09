@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 //const mailgen = require('mailgen');
 const otp = require('otp-generator')
 
-const nodeMailer = (UserEmail) => {
+const nodeMailer = async (UserEmail) => {
     console.log(UserEmail, 'UserEmail')
 
     const email = UserEmail
@@ -26,13 +26,12 @@ const nodeMailer = (UserEmail) => {
         text: `This is your OTP : ${UserOtp}`
     };
 
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            console.error('Error sending email:', error);
-        } else {
-            console.log('Email sent: ' + info.response);
-        }
-    })
+    try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Email sent: ' + info.response);
+    } catch (error) {
+        console.error('Error sending email:', error);
+    }
 
     return UserOtp
 }
